@@ -2,6 +2,7 @@ package dev.lyricsky;
 
 import dev.lyricsky.data.LyricTimeline;
 import dev.lyricsky.data.LyricsBridgeClient;
+import dev.lyricsky.render.FloatingWordRenderer;
 import dev.lyricsky.render.LyricRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -23,6 +24,7 @@ public final class LyricSkyClient implements ClientModInitializer {
     public void onInitializeClient() {
         timeline = new LyricTimeline();
         new LyricsBridgeClient(timeline).start();
+        FloatingWordRenderer.register(timeline);
 
         KeyMapping.Category category = KeyMapping.Category.register(
                 ResourceLocation.fromNamespaceAndPath("lyricsky", "controls"));
