@@ -1,47 +1,56 @@
 # LyricSky
 
-LyricSky is a client-side Fabric mod project for Minecraft 26.2 and 26.3. Its goal is to display timed Spotify lyrics as immersive world-space text in three modes: Cinematic Sky, Scatter, and Look Direction.
+A client-side Fabric mod project targeting Minecraft 26.2 and 26.3. LyricSky connects to a Windows media-session companion, looks up synced lyrics, and displays timed lyric lines in three HUD styles.
 
-## Current status — work in progress
+## Current status
 
-The current GitHub Actions builds prove that the project packages against both Minecraft versions. **They are not yet a finished in-game lyric visualizer.** The Minecraft client entrypoint and renderer are still placeholders, so the current JAR does not show lyrics or provide the three display modes.
+The project contains:
+- A Windows companion that reads the active Windows media session (Spotify is supported when it is the active session).
+- Synced lyric lookup through LRCLIB.
+- A localhost HTTP endpoint for song metadata, playback state, position, and timed lyric lines.
+- A Minecraft client bridge that polls the companion and synchronizes the lyric timeline to the reported playback position.
+- Three HUD display layouts: Cinematic, Scatter, and Look.
+- Key mappings: J toggles lyrics, K cycles styles, [ and ] shift timing by 100 ms.
 
-This repository now also includes a Windows companion prototype that:
-- Reads the currently active Windows media session (including Spotify when Spotify is the active session).
-- Looks up synced lyrics from LRCLIB.
-- Serves track metadata, playback position, and timed lyric lines at \`http://127.0.0.1:8765/lyrics\`.
+**Important limitation:** these are currently HUD visualizations, not the originally planned full 3D world-space sky/word projection. The Look style is a centered HUD reticle layout; it does not yet place text as world geometry along the camera's view direction. The UI and companion need hands-on testing in Minecraft on both supported versions.
 
-Spotify desktop must be running and actively exposing a Windows media session. Lyrics availability depends on LRCLIB; some tracks will not have synced lyrics. The companion does not log in to Spotify or access a Spotify account.
+## Windows companion setup
 
-## Run the Windows companion
+1. Install Python 3.10 or newer on Windows and enable the Python launcher (py).
+2. Open the repository's companion folder.
+3. Double-click start_companion.bat. It installs the Python dependency and starts the service.
+4. Start Spotify and play a track.
+5. Open http://127.0.0.1:8765/health to check the service status.
+6. The lyric payload is available at http://127.0.0.1:8765/lyrics.
 
-1. Install Python 3.10 or newer on Windows and enable the Python launcher (\`py\`).
-2. Double-click \`start_companion.bat\` in the \`companion\` folder.
-3. Start Spotify and play a track.
-4. Open \`http://127.0.0.1:8765/health\` in a browser. The status should change to indicate whether a track and synced lyrics were found.
-5. The lyric JSON is available at \`http://127.0.0.1:8765/lyrics\`.
+The companion binds to 127.0.0.1 only. It does not log in to Spotify or access a Spotify account. It reads the current Windows media session and uses LRCLIB for lyrics. Synced lyrics are not available for every track.
 
-The server binds to \`127.0.0.1\` only and is not exposed to your local network.
+## Minecraft installation
 
-## Minecraft builds
+1. Install Fabric Loader for the exact Minecraft version.
+2. Install Fabric API for that same Minecraft version.
+3. Download the matching lyricsky-minecraft-26.2 or lyricsky-minecraft-26.3 artifact ZIP from the repository's GitHub Actions run.
+4. Extract the mod JAR into %appdata%\\.minecraft\\mods.
+5. Start Minecraft with the matching Fabric profile and run the companion separately.
 
-GitHub Actions builds separate artifacts for Minecraft 26.2 and 26.3. Open the repository's **Actions** tab, select the latest successful run, and download the matching \`lyricsky-minecraft-26.x\` artifact ZIP. Extract the JAR into \`%appdata%\\.minecraft\\mods\` alongside Fabric API for the same Minecraft version.
+## Controls
 
-**Important:** installing the current JAR alone will not display lyrics yet. The in-game input, playback synchronization, and world renderer still need to be integrated and tested against the 26.x client rendering APIs.
+| Key | Action |
+|---|---|
+| J | Toggle lyrics |
+| K | Cycle Cinematic / Scatter / Look |
+| [ | Lyrics timing -100 ms |
+| ] | Lyrics timing +100 ms |
 
-## Intended controls
+Controls can also be changed under Options > Controls > Key Binds.
 
-The planned controls are:
-- J: toggle lyrics
-- K: cycle display mode
-- [: shift timing -100 ms
-- ]: shift timing +100 ms
+## Build
 
-These controls are not active in the current placeholder JAR.
+GitHub Actions builds separate artifacts for Minecraft 26.2 and 26.3 using Java 25. Check the latest workflow run on the Actions tab.
 
 ## Lyrics source
 
-Synced lyrics are requested from LRCLIB. Lyric availability and accuracy vary by track. Lyrics remain the property of their respective rights holders; this project retrieves short-lived data for display and does not redistribute a lyric catalog.
+Synced lyrics are retrieved from LRCLIB. Availability and accuracy vary by track. Lyrics remain the property of their respective rights holders; this project does not redistribute a lyric catalog.
 
 ## License
 
