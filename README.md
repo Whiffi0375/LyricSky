@@ -1,42 +1,47 @@
 # LyricSky
 
-A client-side Fabric mod prototype targeting Minecraft 26.2 and 26.3. The intended display modes are Cinematic, Scatter, and Look.
+LyricSky is a client-side Fabric mod project for Minecraft 26.2 and 26.3. Its goal is to display timed Spotify lyrics as immersive world-space text in three modes: Cinematic Sky, Scatter, and Look Direction.
 
-## Current implementation status
+## Current status — work in progress
 
-This repository is an **early source prototype**. The build workflow is being used to surface API and toolchain compatibility errors; a successful compile is not yet confirmed. No release JAR should be considered ready until the CI builds pass and the mod is tested in-game.
+The current GitHub Actions builds prove that the project packages against both Minecraft versions. **They are not yet a finished in-game lyric visualizer.** The Minecraft client entrypoint and renderer are still placeholders, so the current JAR does not show lyrics or provide the three display modes.
 
-The Minecraft renderer and lyric timeline are prototypes. Spotify detection and the Windows media-session companion app are **not implemented yet**. The client polls a local endpoint at `http://127.0.0.1:8765/lyrics`, but the companion server that would supply data still needs to be written.
+This repository now also includes a Windows companion prototype that:
+- Reads the currently active Windows media session (including Spotify when Spotify is the active session).
+- Looks up synced lyrics from LRCLIB.
+- Serves track metadata, playback position, and timed lyric lines at \`http://127.0.0.1:8765/lyrics\`.
 
-## Controls
+Spotify desktop must be running and actively exposing a Windows media session. Lyrics availability depends on LRCLIB; some tracks will not have synced lyrics. The companion does not log in to Spotify or access a Spotify account.
 
+## Run the Windows companion
+
+1. Install Python 3.10 or newer on Windows and enable the Python launcher (\`py\`).
+2. Double-click \`start_companion.bat\` in the \`companion\` folder.
+3. Start Spotify and play a track.
+4. Open \`http://127.0.0.1:8765/health\` in a browser. The status should change to indicate whether a track and synced lyrics were found.
+5. The lyric JSON is available at \`http://127.0.0.1:8765/lyrics\`.
+
+The server binds to \`127.0.0.1\` only and is not exposed to your local network.
+
+## Minecraft builds
+
+GitHub Actions builds separate artifacts for Minecraft 26.2 and 26.3. Open the repository's **Actions** tab, select the latest successful run, and download the matching \`lyricsky-minecraft-26.x\` artifact ZIP. Extract the JAR into \`%appdata%\\.minecraft\\mods\` alongside Fabric API for the same Minecraft version.
+
+**Important:** installing the current JAR alone will not display lyrics yet. The in-game input, playback synchronization, and world renderer still need to be integrated and tested against the 26.x client rendering APIs.
+
+## Intended controls
+
+The planned controls are:
 - J: toggle lyrics
 - K: cycle display mode
 - [: shift timing -100 ms
 - ]: shift timing +100 ms
 
-## Local companion endpoint
+These controls are not active in the current placeholder JAR.
 
-The client polls `GET http://127.0.0.1:8765/lyrics` and expects:
+## Lyrics source
 
-```json
-{
-  "title": "Song title",
-  "artist": "Artist",
-  "lines": [
-    {"timeMs": 0, "text": "First line"},
-    {"timeMs": 4200, "text": "Second line"}
-  ]
-}
-```
-
-A future Windows companion can read the active media session using Windows Global System Media Transport Controls (GSMTC), then obtain timed lyrics from a separate lyrics provider. That companion is not part of the current build.
-
-## Build
-
-GitHub Actions builds separate artifacts for Minecraft 26.2 and 26.3. The toolchain coordinates are based on Fabric's published version guidance and will be validated by CI. The project uses Java 25 and Minecraft's unobfuscated 26.x names (no Yarn mappings).
-
-Build outputs are uploaded as workflow artifacts for 14 days. Open the repository's **Actions** tab, select the latest successful run, and download the matching `lyricsky-minecraft-26.x` artifact.
+Synced lyrics are requested from LRCLIB. Lyric availability and accuracy vary by track. Lyrics remain the property of their respective rights holders; this project retrieves short-lived data for display and does not redistribute a lyric catalog.
 
 ## License
 
