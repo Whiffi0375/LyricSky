@@ -16,7 +16,8 @@ public final class LyricTimeline {
         anchorNanos = System.nanoTime();
     }
 
-    public void setOffsetMs(long offset) { offsetMs = offset; }
+    public void setOffsetMs(long offset) { offsetMs = Math.max(-15000, Math.min(15000, offset)); }
+    public long getOffsetMs() { return offsetMs; }
 
     public void setPlaybackPosition(long positionMs, boolean isPlaying) {
         anchorPositionMs = Math.max(0, positionMs);
@@ -26,7 +27,7 @@ public final class LyricTimeline {
 
     public String currentLine() {
         List<LyricLine> snapshot = lines.get();
-        if (snapshot.isEmpty()) return "LyricSky • waiting for lyrics";
+        if (snapshot.isEmpty()) return "";
         long elapsed = playing ? (System.nanoTime() - anchorNanos) / 1_000_000L : 0;
         long now = Math.max(0, anchorPositionMs + elapsed + offsetMs);
         String current = "";
@@ -36,4 +37,15 @@ public final class LyricTimeline {
         }
         return current;
     }
+
+    public String nextLine() {
+        List<LyricLine> snapshot = lines.get();
+        if (snapshot.isEmpty()) return "";
+        long elapsed = playing ? (System.nanoTime() - anchorNanos) / 1_000_000L : 0;
+        long now = Math.max(0, anchorPositionMs + elapsed + offsetMs);
+        for (LyricLine line : snapshot) if (line.timeMs() > now) return line.text();
+        return "";
+    }
+
+    public boolean hasLyrics() { return !lines.get().isEmpty(); }
 }
