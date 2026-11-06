@@ -1,18 +1,23 @@
 package dev.lyricsky;
 
+import dev.lyricsky.data.LyricTimeline;
+import dev.lyricsky.data.LyricsBridgeClient;
 import net.fabricmc.api.ClientModInitializer;
 
 /**
- * Minimal 26.x-compatible client entrypoint.
- *
- * The rendering and input integrations are being ported to the 26.x Mojang
- * mappings. Keeping this entrypoint deliberately small ensures the mod can
- * be packaged against both supported game versions while that work proceeds.
+ * Starts the local lyrics bridge. Rendering and keybind registration are
+ * still pending the Minecraft 26.x client API integration.
  */
 public final class LyricSkyClient implements ClientModInitializer {
+    private static LyricTimeline timeline;
+
     @Override
     public void onInitializeClient() {
-        // Client-only initialization. Feature registration is added in the
-        // next compatibility pass once the 26.x rendering APIs are wired up.
+        timeline = new LyricTimeline();
+        new LyricsBridgeClient(timeline).start();
+    }
+
+    public static LyricTimeline getTimeline() {
+        return timeline;
     }
 }
