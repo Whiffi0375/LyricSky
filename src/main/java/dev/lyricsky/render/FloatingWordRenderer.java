@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
@@ -31,8 +30,7 @@ public final class FloatingWordRenderer {
 
     private static void extract(LevelExtractionContext context) {
         Minecraft mc = Minecraft.getInstance();
-        if (!LyricRenderer.isEnabled() || mc.player == null || mc.level == null
-                || mc.options.hideGui || timeline == null) {
+        if (!LyricRenderer.isEnabled() || mc.player == null || mc.level == null || timeline == null) {
             words = List.of();
             return;
         }
@@ -69,7 +67,7 @@ public final class FloatingWordRenderer {
         List<Word> snapshot = words;
         if (snapshot.isEmpty()) return;
 
-        CameraRenderState camera = context.levelState().cameraRenderState;
+        var camera = context.levelState().cameraRenderState;
         Vec3 cameraPos = camera.pos;
         PoseStack pose = context.poseStack();
         SubmitNodeCollector queue = context.submitNodeCollector();
