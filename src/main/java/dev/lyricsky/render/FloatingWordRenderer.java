@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public final class FloatingWordRenderer {
             pose.translate(word.position.x - cameraPos.x,
                     word.position.y - cameraPos.y,
                     word.position.z - cameraPos.z);
-            pose.mulPose(camera.orientation);
+            pose.mulPose(camera.orientation.get(new Matrix4f()));
             float scale = 0.026f + (float) (Math.sin(
                     word.index * 0.8 + System.nanoTime() / 700_000_000.0) * 0.0015);
             pose.scale(-scale, -scale, scale);
