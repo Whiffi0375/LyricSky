@@ -1,12 +1,12 @@
 # LyricSky
 
-A client-side Fabric mod prototype for Minecraft 26.2 and 26.3. It is intended to display timed lyrics in three world-space modes: Cinematic, Scatter, and Look.
+A client-side Fabric mod prototype targeting Minecraft 26.2 and 26.3. The intended display modes are Cinematic, Scatter, and Look.
 
-## Current status
+## Current implementation status
 
-This repository contains an **early source prototype**, not a tested release. No installable JAR is available yet. The 26.2/26.3 Fabric Loader, Loom, mappings, Fabric API, and Java coordinates must be verified against published releases before builds can be considered supported.
+This repository is an **early source prototype**. The build workflow is being used to surface API and toolchain compatibility errors; a successful compile is not yet confirmed. No release JAR should be considered ready until the CI builds pass and the mod is tested in-game.
 
-Spotify detection and the Windows media-session companion are **not implemented yet**. The Minecraft client currently polls a local companion endpoint at `http://127.0.0.1:8765/lyrics`; that endpoint is only an interface contract, not a working Spotify integration.
+The Minecraft renderer and lyric timeline are prototypes. Spotify detection and the Windows media-session companion app are **not implemented yet**. The client polls a local endpoint at `http://127.0.0.1:8765/lyrics`, but the companion server that would supply data still needs to be written.
 
 ## Controls
 
@@ -15,9 +15,9 @@ Spotify detection and the Windows media-session companion are **not implemented 
 - [: shift timing -100 ms
 - ]: shift timing +100 ms
 
-## Local bridge contract
+## Local companion endpoint
 
-The mod polls `GET http://127.0.0.1:8765/lyrics` and expects JSON:
+The client polls `GET http://127.0.0.1:8765/lyrics` and expects:
 
 ```json
 {
@@ -30,11 +30,13 @@ The mod polls `GET http://127.0.0.1:8765/lyrics` and expects JSON:
 }
 ```
 
-The companion app still needs to be written. A Windows companion can read the active media session through Windows Global System Media Transport Controls (GSMTC), then obtain timed lyrics from a separate lyrics provider.
+A future Windows companion can read the active media session using Windows Global System Media Transport Controls (GSMTC), then obtain timed lyrics from a separate lyrics provider. That companion is not part of the current build.
 
-## Build status
+## Build
 
-The dependency values in `gradle.properties` are provisional and must not be treated as verified compatibility coordinates. Once matching 26.2 and 26.3 Fabric releases are confirmed, build with Gradle and the JDK required by those Minecraft versions. Output will be in `build/libs/`.
+GitHub Actions builds separate artifacts for Minecraft 26.2 and 26.3. The toolchain coordinates are based on Fabric's published version guidance and will be validated by CI. The project uses Java 25 and Minecraft's unobfuscated 26.x names (no Yarn mappings).
+
+Build outputs are uploaded as workflow artifacts for 14 days. Open the repository's **Actions** tab, select the latest successful run, and download the matching `lyricsky-minecraft-26.x` artifact.
 
 ## License
 
