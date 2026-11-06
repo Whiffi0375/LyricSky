@@ -1,7 +1,7 @@
 {
-  "key.lyricsky.toggle": "Toggle LyricSky",
-  "key.lyricsky.mode": "Cycle LyricSky mode",
-  "key.lyricsky.offset_back": "Lyrics timing -100ms",
-  "key.lyricsky.offset_forward": "Lyrics timing +100ms",
-  "category.lyricsky": "LyricSky"
+  "key.category.lyricsky.controls": "LyricSky",
+  "key.lyricsky.toggle": "Toggle lyrics",
+  "key.lyricsky.mode": "Cycle lyric display mode",
+  "key.lyricsky.offset_back": "Lyrics timing -100 ms",
+  "key.lyricsky.offset_forward": "Lyrics timing +100 ms"
 }
