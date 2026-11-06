@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lyricsky",
+  "version": "${version}",
+  "name": "LyricSky",
+  "description": "Immersive 3D lyrics in the Minecraft sky.",
+  "authors": ["Whiffi0375"],
+  "contact": {
+    "sources": "https://github.com/Whiffi0375/LyricSky"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.lyricsky.LyricSkyClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": ">=26.2",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
